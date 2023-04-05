@@ -35,7 +35,7 @@ for(int y = height-1; y >= 0; y--)
 
         var ray = new Ray(origin, lowerLeftCorner + u * right + v * up - origin);
 
-        Vector3 color = ray_color(ray);
+        Vector3 color = rayColor(ray);
         myTestImage.SetPixel(y, x, color);
     }
 }
@@ -50,13 +50,36 @@ using (FileStream fs = File.Open(output, FileMode.Create))
     fs.Write(outputBuffer, 0, outputBuffer.Length);
 }
 
-Vector3 ray_color(Ray r)
+Vector3 rayColor(Ray r)
 {
-    var nDir = Vector3.Normalize(r.Direction);
-    var t = 0.5f * (nDir.Y + 1.0f);
+    if(hitSphere(new Vector3(0.0f, 0.0f, -1.0f), .5f, r))
+    {
+        return new Vector3(1.0f, 0.0f, 0.0f);
+    }
 
+    //Normalize the Vector and map its y value axis to a new range (0.0 < y < 1.0, before it was -1.0 < y < 1.0)
+    var nDir = Vector3.Normalize(r.Direction);
+    var rampPosition = 0.5f * (nDir.Y + 1.0f);
+
+    //Define Two colors a Starting Color and Ending Color.
     var cRampStart = new Vector3(1.0f, 1.0f, 1.0f);
     var cRampEnd = new Vector3(0.5f, 0.7f, 1.0f);
 
-    return (1.0f - t) * cRampStart + t * cRampEnd;
+    //Linear Interpolation between the two colors by using our calculated ramp position.
+    return (1.0f - rampPosition) * cRampStart + rampPosition * cRampEnd;
+}
+
+//TODO: There should be a Sphere Class, maybe a good time for using inheritance ? or even better interface composition ?
+bool hitSphere(Vector3 center, float radius, Ray r)
+{
+    //TODO: Refresh my knowledge about Quadratic Equations...
+    Vector3 sphereCenter = r.Origin - center;
+
+    var a = Vector3.DotProduct(r.Direction, r.Direction);
+    var b = 2.0f * Vector3.DotProduct(sphereCenter, r.Direction);
+    var c = Vector3.DotProduct(sphereCenter, sphereCenter) - radius * radius;
+
+    var discriminant = b * b - 4 * a * c;
+
+    return discriminant > 0;
 }

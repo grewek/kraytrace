@@ -21,6 +21,7 @@ namespace kraytrace
 
 		private int CalculatePixelIndex(int y, int x)
 		{
+			//TODO: Catch all index out of bounds errors here !
 			return _imageWidth * y + x;
 		}
 
@@ -31,10 +32,7 @@ namespace kraytrace
 				return;
 			}
 
-			if(targetIndex < _pixelBuffer.Length)
-			{
-				_pixelBuffer[CalculatePixelIndex(y, x)] = color;
-			}
+			_pixelBuffer[CalculatePixelIndex(y, x)] = color;
 		}
 
 		private String GenerateColorString(Vector3 color)
