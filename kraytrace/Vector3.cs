@@ -1,4 +1,5 @@
 ﻿using System;
+using kraytrace;
 namespace kraytrace
 {
 	public struct Vector3
@@ -42,6 +43,8 @@ namespace kraytrace
 			);
 		}
 
+		//TODO: This is the hadamard product and it should really be
+		//		a method instead of a operator overloading...
 		public static Vector3 operator *(Vector3 lhs, Vector3 rhs) {
 			return new Vector3(
 				lhs[0] * rhs[0],
@@ -94,12 +97,12 @@ namespace kraytrace
 			return _vals[0] * _vals[0] + _vals[1] * _vals[1] + _vals[2] * _vals[2];
 		}
 
-		public float DotProduct(Vector3 lhs, Vector3 rhs)
+		public static float DotProduct(Vector3 lhs, Vector3 rhs)
 		{
 			return lhs[0] * rhs[0] + lhs[1] * rhs[1] + lhs[2] * rhs[2];
 		}
 
-		public Vector3 CrossProduct(Vector3 lhs, Vector3 rhs)
+		public static Vector3 CrossProduct(Vector3 lhs, Vector3 rhs)
 		{
 			return new Vector3(
 				lhs[1] * rhs[2] - lhs[2] * rhs[1],
@@ -108,10 +111,16 @@ namespace kraytrace
 			);
 		}
 
+		public static Vector3 Normalize(Vector3 v)
+		{
+			return v / v.Length();
+		}
+
         public override string ToString()
         {
 			return _vals[0].ToString() + ' ' + _vals[1].ToString() + ' ' + _vals[2].ToString();
         }
+
     }
 }
 
