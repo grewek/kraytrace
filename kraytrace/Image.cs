@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Text;
 using kraytrace.LinearAlgebra;
 
@@ -26,22 +27,30 @@ namespace kraytrace
 			return _imageWidth * y + x;
 		}
 
-		public void SetPixel(int y, int x, Vector3 color)
+		private Vector3 AveragePixelColor(Vector3 color, int samplesPerPixel)
+		{
+            var scale = 1f / samplesPerPixel;
+            color *= scale;
+
+			return color;
+        }
+
+		public void SetPixel(int y, int x, Vector3 color, int samplesPerPixel)
 		{
 			if(_pixelBuffer == null)
 			{
 				return;
 			}
 
-			_pixelBuffer[CalculatePixelIndex(y, x)] = color;
+			_pixelBuffer[CalculatePixelIndex(y, x)] = AveragePixelColor(color, samplesPerPixel);
 		}
 
 		private String GenerateColorString(Vector3 color)
 		{
-            StringBuilder builder = new StringBuilder();
-            var rInt = (int)(color[0] * 255.9);
-            var gInt = (int)(color[1] * 255.9);
-            var bInt = (int)(color[2] * 255.9);
+			StringBuilder builder = new StringBuilder();
+            var rInt = (int)(256 * MathHelpers.ClampValue(color.X, 0f, 0.999f));
+            var gInt = (int)(256 * MathHelpers.ClampValue(color.Y, 0f, 0.999f));
+            var bInt = (int)(256 * MathHelpers.ClampValue(color.Z, 0f, 0.999f));
             //TODO: Do we need an alpha channel ?
             builder.AppendFormat("{0} {1} {2}", rInt, gInt, bInt);
             return builder.ToString();

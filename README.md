@@ -11,6 +11,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![TwoSpheres](images/twospheres.jpg)
 
+![Antialiasing](images/antialiased.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]
