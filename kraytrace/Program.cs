@@ -52,25 +52,36 @@ using (FileStream fs = File.Open(output, FileMode.Create))
 
 Vector3 rayColor(Ray r)
 {
-    if(hitSphere(new Vector3(0.0f, 0.0f, -1.0f), .5f, r))
+    var sphereCenter = new Vector3(0f, 0f, -1f);
+
+    var tValueForRay = hitSphere(sphereCenter, .5f, r);
+
+    if(tValueForRay > 0.0f)
     {
-        return new Vector3(1.0f, 0.0f, 0.0f);
+        Vector3 sphereSurfaceNormal = Vector3.Normalize(r.At(tValueForRay) - sphereCenter);
+        Vector3 sphereNormalColor = new Vector3(
+            sphereSurfaceNormal.X + 1f,
+            sphereSurfaceNormal.Y + 1f,
+            sphereSurfaceNormal.Z + 1f);
+
+        return 0.5f * sphereNormalColor;
+
     }
 
     //Normalize the Vector and map its y value axis to a new range (0.0 < y < 1.0, before it was -1.0 < y < 1.0)
     var nDir = Vector3.Normalize(r.Direction);
-    var rampPosition = 0.5f * (nDir.Y + 1.0f);
+    tValueForRay = 0.5f * (nDir.Y + 1.0f);
 
     //Define Two colors a Starting Color and Ending Color.
     var cRampStart = new Vector3(1.0f, 1.0f, 1.0f);
     var cRampEnd = new Vector3(0.5f, 0.7f, 1.0f);
 
     //Linear Interpolation between the two colors by using our calculated ramp position.
-    return (1.0f - rampPosition) * cRampStart + rampPosition * cRampEnd;
+    return (1.0f - tValueForRay) * cRampStart + tValueForRay * cRampEnd;
 }
 
 //TODO: There should be a Sphere Class, maybe a good time for using inheritance ? or even better interface composition ?
-bool hitSphere(Vector3 center, float radius, Ray r)
+float hitSphere(Vector3 center, float radius, Ray r)
 {
     //TODO: Refresh my knowledge about Quadratic Equations...
     Vector3 sphereCenter = r.Origin - center;
@@ -81,5 +92,13 @@ bool hitSphere(Vector3 center, float radius, Ray r)
 
     var discriminant = b * b - 4 * a * c;
 
-    return discriminant > 0;
+    if(discriminant < 0)
+    {
+        return -1.0f;
+    }
+    else
+    {
+        var rDiscriminant = (float)Math.Sqrt(discriminant);
+        return (-b - rDiscriminant) / (2.0f * a);
+    }
 }

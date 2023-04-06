@@ -2,6 +2,7 @@
 using kraytrace;
 namespace kraytrace
 {
+	//TODO: This will probably be too slow at some point, can we use SIMD with c# ?
 	public struct Vector3
 	{
 		private float[] _vals;
