@@ -9,6 +9,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![SurfaceNormals](images/surfnormals.jpg)
 
+![TwoSpheres](images/twospheres.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]

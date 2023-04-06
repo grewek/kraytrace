@@ -7,4 +7,14 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Math\" />
+    <None Remove="Shapes\" />
+    <None Remove="Shapes\Interfaces\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="LinearAlgebra\" />
+    <Folder Include="Shapes\" />
+    <Folder Include="Shapes\Interfaces\" />
+  </ItemGroup>
 </Project>

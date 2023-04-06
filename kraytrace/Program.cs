@@ -1,5 +1,8 @@
 ﻿// See https://aka.ms/new-console-template for more information
 using kraytrace;
+using kraytrace.LinearAlgebra;
+using kraytrace.Shapes;
+
 using System;
 using System.IO;
 using System.Text;
@@ -11,6 +14,11 @@ string output = "output.ppm";
 var aspectRatio = 16.0f / 9.0f;
 var width = 400;
 var height = (int)((float)width / aspectRatio);
+
+var world = new ShapeContainer();
+
+world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f));
+world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100));
 
 var viewportHeight = 2.0f;
 var viewportWidth = aspectRatio * viewportHeight;
@@ -35,7 +43,7 @@ for(int y = height-1; y >= 0; y--)
 
         var ray = new Ray(origin, lowerLeftCorner + u * right + v * up - origin);
 
-        Vector3 color = rayColor(ray);
+        Vector3 color = rayColor(ray, world);
         myTestImage.SetPixel(y, x, color);
     }
 }
@@ -50,55 +58,26 @@ using (FileStream fs = File.Open(output, FileMode.Create))
     fs.Write(outputBuffer, 0, outputBuffer.Length);
 }
 
-Vector3 rayColor(Ray r)
+Vector3 rayColor(Ray r, ShapeContainer world)
 {
-    var sphereCenter = new Vector3(0f, 0f, -1f);
-
-    var tValueForRay = hitSphere(sphereCenter, .5f, r);
-
-    if(tValueForRay > 0.0f)
+    if(world.FindClosestIntersection(r, 0f, float.PositiveInfinity))
     {
-        Vector3 sphereSurfaceNormal = Vector3.Normalize(r.At(tValueForRay) - sphereCenter);
         Vector3 sphereNormalColor = new Vector3(
-            sphereSurfaceNormal.X + 1f,
-            sphereSurfaceNormal.Y + 1f,
-            sphereSurfaceNormal.Z + 1f);
+            world.ClosestHit.Normal.X + 1f,
+            world.ClosestHit.Normal.Y + 1f,
+            world.ClosestHit.Normal.Z + 1f);
 
         return 0.5f * sphereNormalColor;
-
     }
 
     //Normalize the Vector and map its y value axis to a new range (0.0 < y < 1.0, before it was -1.0 < y < 1.0)
     var nDir = Vector3.Normalize(r.Direction);
-    tValueForRay = 0.5f * (nDir.Y + 1.0f);
+    var rampTValue = 0.5f * (nDir.Y + 1.0f);
 
     //Define Two colors a Starting Color and Ending Color.
     var cRampStart = new Vector3(1.0f, 1.0f, 1.0f);
     var cRampEnd = new Vector3(0.5f, 0.7f, 1.0f);
 
     //Linear Interpolation between the two colors by using our calculated ramp position.
-    return (1.0f - tValueForRay) * cRampStart + tValueForRay * cRampEnd;
-}
-
-//TODO: There should be a Sphere Class, maybe a good time for using inheritance ? or even better interface composition ?
-float hitSphere(Vector3 center, float radius, Ray r)
-{
-    //TODO: Refresh my knowledge about Quadratic Equations...
-    Vector3 sphereCenter = r.Origin - center;
-
-    var a = Vector3.DotProduct(r.Direction, r.Direction);
-    var b = 2.0f * Vector3.DotProduct(sphereCenter, r.Direction);
-    var c = Vector3.DotProduct(sphereCenter, sphereCenter) - radius * radius;
-
-    var discriminant = b * b - 4 * a * c;
-
-    if(discriminant < 0)
-    {
-        return -1.0f;
-    }
-    else
-    {
-        var rDiscriminant = (float)Math.Sqrt(discriminant);
-        return (-b - rDiscriminant) / (2.0f * a);
-    }
+    return (1.0f - rampTValue) * cRampStart + rampTValue * cRampEnd;
 }

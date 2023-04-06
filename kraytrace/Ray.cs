@@ -1,5 +1,6 @@
 ﻿using System;
 using kraytrace;
+using kraytrace.LinearAlgebra;
 
 namespace kraytrace
 {
