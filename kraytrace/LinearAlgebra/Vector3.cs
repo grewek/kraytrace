@@ -152,6 +152,11 @@ public struct Vector3
 		);
 	}
 
+	public static Vector3 Reflect(Vector3 incoming, Vector3 normal)
+	{
+		return incoming - 2 * DotProduct(incoming, normal) * normal;
+	}
+
 	public static Vector3 Normalize(Vector3 v)
 	{
 		return v / v.Length();

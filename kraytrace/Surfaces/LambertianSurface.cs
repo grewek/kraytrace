@@ -22,6 +22,8 @@ namespace kraytrace.Surfaces
 
         public bool Scatter(Ray inboundRay, HitRecord rec, out Vector3 attenuation, out Ray scatterRay)
         {
+			var shouldScatter = MathHelpers.RandomFloat();
+
 			var scatterDirection = rec.Normal + Vector3.RandomVectorInHemisphere(rec.Normal);
 
 			if(MathHelpers.CloseToZero(scatterDirection))

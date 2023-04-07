@@ -26,11 +26,16 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
             var world = new ShapeContainer();
 
-            var defaultSurface = new LambertianSurface();
-            var redMaterial = new LambertianSurface(new Vector3(0.75f, 0f, 0f));
-            var greenMaterial = new LambertianSurface(new Vector3(0f, .5f, 0f));
-            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f, redMaterial));
-            world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100, greenMaterial));
+            var groundSurface = new LambertianSurface(new Vector3(.8f, .8f, 0f));
+            var surfaceLeft = new MetalSurface(new Vector3(1.0f, 1.0f, 1.0f));
+            var surfaceCenter = new LambertianSurface(new Vector3(0.7f, 0.3f, 0.3f));
+            var surfaceRight = new MetalSurface(new Vector3(.8f, .6f, .2f));
+
+
+            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f, surfaceCenter));
+            world.AddShape(new Sphere(new Vector3(-1f, 0f, -1f), .5f, surfaceLeft));
+            world.AddShape(new Sphere(new Vector3(1f, 0f, -1f), .5f, surfaceRight));
+            world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100, groundSurface));
 
             Camera camera = new Camera();
 
@@ -80,10 +85,12 @@ namespace MyApp // Note: actual namespace depends on the project name.
             {
                 Vector3 attenuation;
                 Ray scatterRay;
-                rec.Value.Material.Scatter(r, rec.Value, out attenuation, out scatterRay);
+                if(rec.Value.Material.Scatter(r, rec.Value, out attenuation, out scatterRay))
+                {
+                    return attenuation * rayColor(scatterRay, world, depth - 1);
+                }
 
-                Vector3 target = rec.Value.Position + rec.Value.Normal + Vector3.RandomVectorInHemisphere(rec.Value.Normal);
-                return attenuation * rayColor(scatterRay, world, depth - 1);
+                return new Vector3(0f, 0f, 0f);
                 //return 0.5f * rayColor(new Ray(rec.Value.Position, target - rec.Value.Position), world, depth - 1);
             }
 

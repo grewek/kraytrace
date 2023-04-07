@@ -17,6 +17,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![ColoredSpheres](images/colorfulSpheres.jpg)
 
+![MetalSpheres](images/metals.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]
