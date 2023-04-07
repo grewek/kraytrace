@@ -26,6 +26,34 @@ public struct Vector3
 		_vals = new float[3] { x, y, z };
 	}
 
+	public static Vector3 RandomVector()
+	{
+		return new Vector3(
+			MathHelpers.RandomFloat(),
+			MathHelpers.RandomFloat(),
+			MathHelpers.RandomFloat()
+		);
+	}
+
+	public static Vector3 RandomVector(float min, float max)
+	{
+		return new Vector3(
+			MathHelpers.RandomFloat(min, max),
+			MathHelpers.RandomFloat(min, max),
+			MathHelpers.RandomFloat(min, max)
+		);
+	}
+
+	public static Vector3 RandomVectorInUnitSphere()
+	{
+		while(true)
+		{
+			var result = RandomVector(-1f, 1f);
+			if (result.LengthSquared() >= 1f) continue;
+			return result;
+		}
+	}
+
 	public static Vector3 operator +(Vector3 lhs, Vector3 rhs)
 	{
 		return new Vector3(
@@ -117,10 +145,10 @@ public struct Vector3
 		return v / v.Length();
 	}
 
-        public override string ToString()
-        {
+	public override string ToString()
+	{
 		return _vals[0].ToString() + ' ' + _vals[1].ToString() + ' ' + _vals[2].ToString();
-        }
+	}
 
-    }
+}
 

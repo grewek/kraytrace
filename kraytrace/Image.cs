@@ -29,8 +29,11 @@ namespace kraytrace
 
 		private Vector3 AveragePixelColor(Vector3 color, int samplesPerPixel)
 		{
+			//NOTE: Gamma correction applied as well
             var scale = 1f / samplesPerPixel;
-            color *= scale;
+			color[0] = (float)Math.Sqrt(color[0] * scale);
+			color[1] = (float)Math.Sqrt(color[1] * scale);
+			color[2] = (float)Math.Sqrt(color[2] * scale);
 
 			return color;
         }

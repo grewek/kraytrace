@@ -7,12 +7,7 @@ namespace kraytrace.Shapes
 	public class ShapeContainer
 	{
 		private List<IRayCollision> _shapes;
-		private HitRecord _closestHit; //TODO: Refactor this is a really dumb idea...
 
-		public HitRecord ClosestHit
-		{
-			get { return _closestHit; }
-		}
 		public ShapeContainer()
 		{
 			_shapes = new List<IRayCollision>();
@@ -28,18 +23,21 @@ namespace kraytrace.Shapes
 			_shapes.Clear();
 		}
 
-		public bool FindClosestIntersection(Ray r, float tMin, float tMax)
+		public bool FindClosestIntersection(Ray r, float tMin, float tMax, out HitRecord? rec)
 		{
 			var hitAnything = false;
 			var closest = tMax;
+			rec = null;
 
 			foreach (var shape in _shapes)
 			{
-				if(shape.Intersected(r, tMin, closest))
+				HitRecord? record = shape.Intersected(r, tMin, closest);
+
+				if(record.HasValue)
 				{
 					hitAnything = true;
-					closest = shape.Record.TValue; //TODO: Ugh icky api -.-
-					_closestHit = shape.Record;
+					closest = record.Value.TValue;
+					rec = record.Value;
 				}
 			}
 

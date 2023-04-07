@@ -5,15 +5,8 @@ namespace kraytrace.Shapes
 {
 	public class Sphere : Interfaces.IRayCollision
     {
-        private HitRecord _record;
-
         private Vector3 _center;
         private float _radius;
-
-        public HitRecord Record
-        {
-            get { return _record; }
-        }
 
         public Vector3 Center
         {
@@ -33,7 +26,7 @@ namespace kraytrace.Shapes
         }
 
 
-        public bool Intersected(Ray r, float tMin, float tMax)
+        public HitRecord? Intersected(Ray r, float tMin, float tMax)
         {
             Vector3 sphereCenter = r.Origin - _center;
 
@@ -45,7 +38,7 @@ namespace kraytrace.Shapes
 
             if(discriminant < 0f)
             {
-                return false;
+                return null;
             }
 
             var rDiscriminant = (float)Math.Sqrt(discriminant);
@@ -58,17 +51,14 @@ namespace kraytrace.Shapes
 
                 if (root < tMin || root > tMax)
                 {
-                    return false;
+                    return null;
                 }
             }
 
-            _record.TValue = root;
-            _record.Position = r.At(root);
+            var position = r.At(root);
+            var outwardNormal = (position - _center) / _radius;
 
-            Vector3 outwardNormal = (_record.Position - _center) / _radius;
-            _record.DetermineFaceNormal(r, outwardNormal);
-
-            return true;
+            return new HitRecord(position, r.Direction, root, outwardNormal);
 
         }
     }

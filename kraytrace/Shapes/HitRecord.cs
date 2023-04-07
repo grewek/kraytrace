@@ -3,19 +3,22 @@ using kraytrace.LinearAlgebra;
 
 namespace kraytrace.Shapes
 {
-	public struct HitRecord
+	public readonly struct HitRecord
 	{
-		public Vector3 Position;
-		public Vector3 Normal;
-		public float TValue;
+		public readonly Vector3 Position;
+		public readonly Vector3 Normal;
+		public readonly float TValue;
 
-		private bool _frontface;
+		public readonly bool FrontFace;
 
-		public void DetermineFaceNormal(Ray r, Vector3 outwardNormal)
+		public HitRecord(Vector3 position, Vector3 direction, float tValue, Vector3 outwardNormal)
 		{
-			_frontface = Vector3.DotProduct(r.Direction, outwardNormal) < 0f;
-			Normal = _frontface ? outwardNormal : -outwardNormal;
-		}
+			Position = position;
+            FrontFace = Vector3.DotProduct(direction, outwardNormal) < 0f;
+            Normal = FrontFace ? outwardNormal : -outwardNormal;
+
+			TValue = tValue;
+        }
 	}
 }
 

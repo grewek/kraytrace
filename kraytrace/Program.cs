@@ -21,6 +21,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             var width = 400;
             var height = (int)((float)width / aspectRatio);
             var samplesPerPixel = 100;
+            var depth = 5;
 
             var world = new ShapeContainer();
 
@@ -40,11 +41,11 @@ namespace MyApp // Note: actual namespace depends on the project name.
                     Vector3 color = new Vector3();
                     for(int sample = 0; sample < samplesPerPixel; sample++)
                     {
-                        var u = ((float)x + (float)rand.NextDouble()) / (width - 1);
-                        var v = ((float)y + (float)rand.NextDouble()) / (height - 1);
+                        var u = ((float)x + MathHelpers.RandomFloat()) / (width - 1);
+                        var v = ((float)y + MathHelpers.RandomFloat()) / (height - 1);
 
                         var ray = camera.GetRay(u, v);
-                        color += rayColor(ray, world);
+                        color += rayColor(ray, world, depth);
                     }
 
                     myTestImage.SetPixel(y, x, color, samplesPerPixel);
@@ -62,16 +63,19 @@ namespace MyApp // Note: actual namespace depends on the project name.
             }
         }
 
-        static Vector3 rayColor(Ray r, ShapeContainer world)
+        static Vector3 rayColor(Ray r, ShapeContainer world, int depth)
         {
-            if (world.FindClosestIntersection(r, 0f, float.PositiveInfinity))
+            if(depth <= 0)
             {
-                Vector3 sphereNormalColor = new Vector3(
-                    world.ClosestHit.Normal.X + 1f,
-                    world.ClosestHit.Normal.Y + 1f,
-                    world.ClosestHit.Normal.Z + 1f);
+                return new Vector3(0f, 0f, 0f);
+            }
 
-                return 0.5f * sphereNormalColor;
+            HitRecord? rec;
+            //NOTE: Prevent Z-Fighting by using a value that is close to zero but __not__ zero !
+            if (world.FindClosestIntersection(r, 0.0001f, float.PositiveInfinity, out rec))
+            {
+                Vector3 target = rec.Value.Position + rec.Value.Normal + Vector3.RandomVectorInUnitSphere();
+                return 0.5f * rayColor(new Ray(rec.Value.Position, target - rec.Value.Position), world, depth - 1);
             }
 
             //Normalize the Vector and map its y value axis to a new range (0.0 < y < 1.0, before it was -1.0 < y < 1.0)

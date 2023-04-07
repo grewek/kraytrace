@@ -13,6 +13,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![Antialiasing](images/antialiased.jpg)
 
+![LambertianSphere](images/lambertSphere.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]

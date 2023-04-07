@@ -5,8 +5,7 @@ namespace kraytrace.Shapes.Interfaces
 {
 	public interface IRayCollision
 	{
-		public HitRecord Record { get; }
-		public bool Intersected(Ray r, float tMin, float tMax);
+		public HitRecord? Intersected(Ray r, float tMin, float tMax);
 	}
 }
 
