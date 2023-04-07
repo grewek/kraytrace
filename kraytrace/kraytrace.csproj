@@ -11,10 +11,14 @@
     <None Remove="Math\" />
     <None Remove="Shapes\" />
     <None Remove="Shapes\Interfaces\" />
+    <None Remove="Surfaces\" />
+    <None Remove="Surfaces\Interfaces\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="LinearAlgebra\" />
     <Folder Include="Shapes\" />
     <Folder Include="Shapes\Interfaces\" />
+    <Folder Include="Surfaces\" />
+    <Folder Include="Surfaces\Interfaces\" />
   </ItemGroup>
 </Project>

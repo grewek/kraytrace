@@ -10,6 +10,15 @@ namespace kraytrace.LinearAlgebra
 			_random = new Random();
 		}
 
+		public static bool CloseToZero(Vector3 v)
+		{
+			var epsilon = 0.00000001f;
+
+			return (Math.Abs(v[0]) < epsilon) &&
+				(Math.Abs(v[1]) < epsilon) &&
+				(Math.Abs(v[2]) < epsilon);
+		}
+
 		public static float DegreesToRadians(float deg)
 		{
 			return deg * float.Pi / 180f;

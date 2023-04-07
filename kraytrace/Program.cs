@@ -2,6 +2,7 @@
 using kraytrace;
 using kraytrace.LinearAlgebra;
 using kraytrace.Shapes;
+using kraytrace.Surfaces;
 
 using System;
 using System.IO;
@@ -25,8 +26,11 @@ namespace MyApp // Note: actual namespace depends on the project name.
 
             var world = new ShapeContainer();
 
-            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f));
-            world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100));
+            var defaultSurface = new LambertianSurface();
+            var redMaterial = new LambertianSurface(new Vector3(0.75f, 0f, 0f));
+            var greenMaterial = new LambertianSurface(new Vector3(0f, .5f, 0f));
+            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f, redMaterial));
+            world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100, greenMaterial));
 
             Camera camera = new Camera();
 
@@ -74,8 +78,13 @@ namespace MyApp // Note: actual namespace depends on the project name.
             //NOTE: Prevent Z-Fighting by using a value that is close to zero but __not__ zero !
             if (world.FindClosestIntersection(r, 0.0001f, float.PositiveInfinity, out rec))
             {
-                Vector3 target = rec.Value.Position + rec.Value.Normal + Vector3.RandomVectorInUnitSphere();
-                return 0.5f * rayColor(new Ray(rec.Value.Position, target - rec.Value.Position), world, depth - 1);
+                Vector3 attenuation;
+                Ray scatterRay;
+                rec.Value.Material.Scatter(r, rec.Value, out attenuation, out scatterRay);
+
+                Vector3 target = rec.Value.Position + rec.Value.Normal + Vector3.RandomVectorInHemisphere(rec.Value.Normal);
+                return attenuation * rayColor(scatterRay, world, depth - 1);
+                //return 0.5f * rayColor(new Ray(rec.Value.Position, target - rec.Value.Position), world, depth - 1);
             }
 
             //Normalize the Vector and map its y value axis to a new range (0.0 < y < 1.0, before it was -1.0 < y < 1.0)

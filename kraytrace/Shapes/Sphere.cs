@@ -1,12 +1,17 @@
 ﻿using System;
+
 using kraytrace.LinearAlgebra;
+using kraytrace.Surfaces.Interfaces;
 
 namespace kraytrace.Shapes
 {
 	public class Sphere : Interfaces.IRayCollision
     {
         private Vector3 _center;
+
         private float _radius;
+
+        private Material _surfaceMaterial;
 
         public Vector3 Center
         {
@@ -17,12 +22,15 @@ namespace kraytrace.Shapes
 		{
             _center = new Vector3();
             _radius = 1f; //NOTE: Create a unit sphere at the (0,0,0) Coordinates
+            //TODO: Create a default surface material !
+
 		}
 
-        public Sphere(Vector3 center, float radius)
+        public Sphere(Vector3 center, float radius, Material surfaceMaterial)
         {
             _center = center;
             _radius = radius;
+            _surfaceMaterial = surfaceMaterial;
         }
 
 
@@ -58,7 +66,7 @@ namespace kraytrace.Shapes
             var position = r.At(root);
             var outwardNormal = (position - _center) / _radius;
 
-            return new HitRecord(position, r.Direction, root, outwardNormal);
+            return new HitRecord(position, r.Direction, root, outwardNormal, _surfaceMaterial);
 
         }
     }

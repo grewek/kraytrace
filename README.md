@@ -15,6 +15,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![LambertianSphere](images/lambertSphere.jpg)
 
+![ColoredSpheres](images/colorfulSpheres.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]

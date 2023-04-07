@@ -35,20 +35,32 @@ public struct Vector3
 		);
 	}
 
-	public static Vector3 RandomVector(float min, float max)
+	public static Vector3 RandomUnitVector(float min, float max)
 	{
-		return new Vector3(
+		return Vector3.Normalize(new Vector3(
 			MathHelpers.RandomFloat(min, max),
 			MathHelpers.RandomFloat(min, max),
 			MathHelpers.RandomFloat(min, max)
-		);
+		));
+	}
+
+	public static Vector3 RandomVectorInHemisphere(Vector3 normal)
+	{
+		Vector3 unitSphere = Vector3.RandomVectorInUnitSphere();
+
+		if(Vector3.DotProduct(unitSphere, normal) > 0.0f)
+		{
+			return unitSphere;
+		}
+
+		return -unitSphere;
 	}
 
 	public static Vector3 RandomVectorInUnitSphere()
 	{
 		while(true)
 		{
-			var result = RandomVector(-1f, 1f);
+			var result = RandomUnitVector(-1f, 1f);
 			if (result.LengthSquared() >= 1f) continue;
 			return result;
 		}
