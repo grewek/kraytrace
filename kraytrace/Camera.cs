@@ -6,6 +6,7 @@ namespace kraytrace
 {
 	public class Camera
 	{
+
 		private Vector3 _origin;
 		private Vector3 _lowerLeftCorner;
 
@@ -13,10 +14,11 @@ namespace kraytrace
         private Vector3 _up;
         private Vector3 _forward;
 		
-		public Camera()
+		public Camera(float verticalFov, float aspectRatio)
 		{
-            var aspectRatio = 16f / 9f;
-            var viewportHeight = 2f;
+            var theta = MathHelpers.DegreesToRadians(verticalFov);
+            var viewportHeight = (float)Math.Tan(theta/2f) * 2.0f;
+
             var viewportWidth = aspectRatio * viewportHeight;
 			var focalLength = 1f;
 

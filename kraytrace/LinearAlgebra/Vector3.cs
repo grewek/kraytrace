@@ -157,6 +157,15 @@ public struct Vector3
 		return incoming - 2 * DotProduct(incoming, normal) * normal;
 	}
 
+	public static Vector3 Refract(Vector3 uv, Vector3 normal, float etaiOverEtat)
+	{
+		var cosTheta = Math.Min(Vector3.DotProduct(-uv, normal), 1.0f);
+		Vector3 outPerpendicular = etaiOverEtat * (uv + cosTheta * normal);
+		Vector3 outParallel = (float)-Math.Sqrt(Math.Abs(1.0 - outPerpendicular.LengthSquared())) * normal;
+
+		return outParallel + outPerpendicular;
+	}
+
 	public static Vector3 Normalize(Vector3 v)
 	{
 		return v / v.Length();

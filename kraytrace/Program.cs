@@ -22,22 +22,22 @@ namespace MyApp // Note: actual namespace depends on the project name.
             var width = 400;
             var height = (int)((float)width / aspectRatio);
             var samplesPerPixel = 100;
-            var depth = 5;
+            var depth = 20;
 
             var world = new ShapeContainer();
 
             var groundSurface = new LambertianSurface(new Vector3(.8f, .8f, 0f));
-            var surfaceLeft = new MetalSurface(new Vector3(1.0f, 1.0f, 1.0f));
-            var surfaceCenter = new LambertianSurface(new Vector3(0.7f, 0.3f, 0.3f));
-            var surfaceRight = new MetalSurface(new Vector3(.8f, .6f, .2f));
+            var surfaceLeft = new MetalSurface(new Vector3(1.0f, 1.0f, 1.0f), 0.3f);
+            var surfaceCenter = new DielectricSurface(1.4f);
+            var surfaceRight = new MetalSurface(new Vector3(.8f, .6f, .2f), 1f);
 
 
-            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f, surfaceCenter));
+            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .4f, surfaceCenter));
             world.AddShape(new Sphere(new Vector3(-1f, 0f, -1f), .5f, surfaceLeft));
             world.AddShape(new Sphere(new Vector3(1f, 0f, -1f), .5f, surfaceRight));
             world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100, groundSurface));
 
-            Camera camera = new Camera();
+            Camera camera = new Camera(50f, aspectRatio);
 
             var myTestImage = new Image(width, height);
 
@@ -80,7 +80,7 @@ namespace MyApp // Note: actual namespace depends on the project name.
             }
 
             HitRecord? rec;
-            //NOTE: Prevent Z-Fighting by using a value that is close to zero but __not__ zero !
+            //NOTE: Prevent Z-Fighting by using a value that is very close to zero but __not__ zero !
             if (world.FindClosestIntersection(r, 0.0001f, float.PositiveInfinity, out rec))
             {
                 Vector3 attenuation;

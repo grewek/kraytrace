@@ -19,6 +19,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![MetalSpheres](images/metals.jpg)
 
+![GlassSphere](images/glassSphere.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]
