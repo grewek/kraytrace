@@ -21,6 +21,8 @@ Follow along of the 'Raytracer in one Weekend' book. Written in C#
 
 ![GlassSphere](images/glassSphere.jpg)
 
+![Camera](images/camera.jpg)
+
 # Resources
 
 Book[https://raytracing.github.io]

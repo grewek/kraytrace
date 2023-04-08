@@ -27,17 +27,17 @@ namespace MyApp // Note: actual namespace depends on the project name.
             var world = new ShapeContainer();
 
             var groundSurface = new LambertianSurface(new Vector3(.8f, .8f, 0f));
-            var surfaceLeft = new MetalSurface(new Vector3(1.0f, 1.0f, 1.0f), 0.3f);
-            var surfaceCenter = new DielectricSurface(1.4f);
-            var surfaceRight = new MetalSurface(new Vector3(.8f, .6f, .2f), 1f);
+            var surfaceLeft = new DielectricSurface(1.5f);
+            var surfaceCenter = new LambertianSurface(new Vector3(.1f, .2f, .5f));
+            var surfaceRight = new MetalSurface(new Vector3(.8f, .6f, .2f), .55f);
 
 
-            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .4f, surfaceCenter));
+            world.AddShape(new Sphere(new Vector3(0f, 0f, -1f), .5f, surfaceCenter));
             world.AddShape(new Sphere(new Vector3(-1f, 0f, -1f), .5f, surfaceLeft));
-            world.AddShape(new Sphere(new Vector3(1f, 0f, -1f), .5f, surfaceRight));
+            world.AddShape(new Sphere(new Vector3(-1f, 0f, -1f), .45f, surfaceLeft));
+            world.AddShape(new Sphere(new Vector3(1f, 0f, -1f), -.45f, surfaceRight));
             world.AddShape(new Sphere(new Vector3(0f, -100.5f, -1f), 100, groundSurface));
-
-            Camera camera = new Camera(50f, aspectRatio);
+            Camera camera = new Camera(50f, aspectRatio, new Vector3(-2f, 2f, 1f), new Vector3(0f, 0f, -1f), new Vector3(0f, 1f, 0f));
 
             var myTestImage = new Image(width, height);
 
